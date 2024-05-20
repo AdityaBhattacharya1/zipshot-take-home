@@ -5,7 +5,7 @@ import { signInWithPopup } from 'firebase/auth'
 import { doc, Timestamp, setDoc, getDoc } from 'firebase/firestore'
 
 const Login = () => {
-	const [_, error] = useAuthState(auth)
+	const [_] = useAuthState(auth)
 	const navigate = useNavigate()
 	const signInWithGoogle = async () => {
 		try {
@@ -41,7 +41,6 @@ const Login = () => {
 
 	return (
 		<div>
-			{error && <h1>Error in authentication with Google!</h1>}
 			<button onClick={signInWithGoogle}>Login with Google</button>
 		</div>
 	)

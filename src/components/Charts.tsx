@@ -91,10 +91,10 @@ const DataVisualisation: React.FC<Props> = ({ userData }) => {
 			<h2>Line Chart of Session Length Over Time</h2>
 			<LineChart
 				h={300}
-				w={500}
+				w={700}
 				data={lineChartData}
 				series={[{ name: 'sessionLength', color: 'indigo.6' }]}
-				dataKey="sessionLength"
+				dataKey=""
 				xAxisLabel="Dates"
 				yAxisLabel="Session Length"
 			/>
