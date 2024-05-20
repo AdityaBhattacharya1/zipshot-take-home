@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "prod": "zipshot-take"
+  },
+  "targets": {},
+  "etags": {}
+}
