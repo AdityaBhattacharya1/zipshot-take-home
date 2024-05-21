@@ -123,7 +123,7 @@ const Home: React.FC = () => {
 											'N/A'}
 									</Table.Th>
 									<Table.Th>
-										{data.loginFrequency || 'N/A'}
+										{data.loginCount || 'N/A'}
 									</Table.Th>
 									<Table.Th>
 										{data.sessionLength || 'N/A'}
