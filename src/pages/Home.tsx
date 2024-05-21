@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Table } from '@mantine/core'
 import DataTable from '../components/Table'
 import DataVisualisation from '../components/Charts'
+import { getDifferenceBetweenDates } from '../utils/dateDiff'
 
 const Home: React.FC = () => {
 	const [elapsed, setElapsed] = useState<number>(0)
@@ -109,7 +110,6 @@ const Home: React.FC = () => {
 								email: data.email,
 								dateOfCreation: data.dateOfCreation,
 							})
-							console.log('data', data)
 
 							return (
 								<Table.Tr key={doc.id}>
@@ -128,7 +128,17 @@ const Home: React.FC = () => {
 										{data.loginCount || 'N/A'}
 									</Table.Th>
 									<Table.Th>
-										{data.loginFrequency || 'N/A'}
+										{Math.floor(
+											data.loginCount /
+												getDifferenceBetweenDates(
+													data.lastLoggedIn
+														.toDate()
+														.toString(),
+													data.dateOfCreation
+														.toDate()
+														.toString()
+												)
+										) || 'N/A'}
 									</Table.Th>
 									<Table.Th>
 										{data.sessionLength || 'N/A'}
