@@ -41,8 +41,8 @@ const DataVisualisation: React.FC<Props> = ({ userData }) => {
 		color: colors[index],
 	}))
 
-	const lastLoggedInDatesData = lastLoggedInDates.map((date, index) => ({
-		date: date.toString().slice(0, 10),
+	const lastLoggedInDatesData = lastLoggedInDates.map((date: any, index) => ({
+		date: date ? date.toDate().toString().slice(0, 10) : '',
 		sessionLength: sessionLengths[index],
 	}))
 
@@ -66,6 +66,8 @@ const DataVisualisation: React.FC<Props> = ({ userData }) => {
 		{}
 	)
 
+	console.log('group', groupedData)
+
 	const lineChartData = Object.keys(groupedData)
 		.map((date) => ({
 			date,
@@ -74,7 +76,9 @@ const DataVisualisation: React.FC<Props> = ({ userData }) => {
 				0
 			),
 		}))
+		.flat()
 		.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+	console.log('line', lineChartData)
 
 	return (
 		<div>

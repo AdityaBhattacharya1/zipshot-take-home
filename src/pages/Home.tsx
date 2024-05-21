@@ -93,6 +93,7 @@ const Home: React.FC = () => {
 					'Email',
 					'Username',
 					'Last Logged In',
+					'Login Count',
 					'Login Frequency',
 					'Session Length',
 				]}
@@ -101,13 +102,14 @@ const Home: React.FC = () => {
 					<>
 						{usersList.docs.map((doc) => {
 							const data = doc.data()
-							// only get the latest 15 user's data
 							userDataArr.push({
 								sessionLength: data.sessionLength,
 								lastLoggedInDate: data.lastLoggedIn,
 								username: data.username,
 								email: data.email,
+								dateOfCreation: data.dateOfCreation,
 							})
+							console.log('data', data)
 
 							return (
 								<Table.Tr key={doc.id}>
@@ -118,12 +120,15 @@ const Home: React.FC = () => {
 									<Table.Th>
 										{doc
 											.data()
-											.lastLoggedIn.toDate()
+											.lastLoggedIn?.toDate()
 											.toLocaleTimeString('en-US') ||
 											'N/A'}
 									</Table.Th>
 									<Table.Th>
 										{data.loginCount || 'N/A'}
+									</Table.Th>
+									<Table.Th>
+										{data.loginFrequency || 'N/A'}
 									</Table.Th>
 									<Table.Th>
 										{data.sessionLength || 'N/A'}
