@@ -82,7 +82,7 @@ const Home: React.FC = () => {
 		auth.signOut()
 		navigate('/')
 	}
-	return (
+	return user !== null ? (
 		<div>
 			{usersListError && (
 				<strong>Error: {JSON.stringify(usersListError)}</strong>
@@ -189,6 +189,8 @@ const Home: React.FC = () => {
 			)}
 			<Button onClick={handleLogout}>Logout</Button>
 		</div>
+	) : (
+		<h1>Login to view this page</h1>
 	)
 }
 
