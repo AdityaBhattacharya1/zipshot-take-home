@@ -15,7 +15,7 @@ import { useCollection } from 'react-firebase-hooks/firestore'
 import { useIdleTimer } from 'react-idle-timer/legacy'
 import { useNavigate } from 'react-router-dom'
 
-import { Button, Table } from '@mantine/core'
+import { Button, Table, TextInput } from '@mantine/core'
 import DataTable from '../components/Table'
 import DataVisualisation from '../components/Charts'
 import { getDifferenceBetweenDates } from '../utils/dateDiff'
@@ -23,6 +23,8 @@ import { getDifferenceBetweenDates } from '../utils/dateDiff'
 const Home: React.FC = () => {
 	const [elapsed, setElapsed] = useState<number>(0)
 	const [yesterdaySignedInUsers, setYesterdaySignedInUsers] = useState<any>()
+	const [searchQuery, setSearchQuery] = useState<string>('')
+	const [filteredUserData, setFilteredUserData] = useState<any[]>([])
 	const [user] = useAuthState(auth)
 	const navigate = useNavigate()
 	const [usersList, usersListLoading, usersListError] = useCollection(
@@ -42,6 +44,14 @@ const Home: React.FC = () => {
 		timeout: 10_000,
 		throttle: 500,
 	})
+
+	const handleSearch = (query: string) => {
+		setSearchQuery(query)
+		const filteredUsers = usersList?.docs.filter((doc) =>
+			doc.data().email.toLowerCase().includes(query.toLowerCase())
+		)
+		setFilteredUserData(filteredUsers || [])
+	}
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -89,6 +99,7 @@ const Home: React.FC = () => {
 				<strong>Error: {JSON.stringify(usersListError)}</strong>
 			)}
 			{usersListLoading && <span>Collection: Loading...</span>}
+
 			<DataTable
 				headers={[
 					'Email',
@@ -99,55 +110,54 @@ const Home: React.FC = () => {
 					'Session Length',
 				]}
 			>
-				{usersList && (
-					<>
-						{usersList.docs.map((doc) => {
-							const data = doc.data()
-							userDataArr.push({
-								sessionLength: data.sessionLength,
-								lastLoggedInDate: data.lastLoggedIn,
-								username: data.username,
-								email: data.email,
-								dateOfCreation: data.dateOfCreation,
-							})
+				<TextInput
+					placeholder="Search by email"
+					value={searchQuery}
+					onChange={(event) =>
+						handleSearch(event.currentTarget.value)
+					}
+				/>
+				{(filteredUserData.length > 0
+					? filteredUserData
+					: usersList?.docs
+				)?.map((doc) => {
+					const data = doc.data()
+					userDataArr.push({
+						sessionLength: data.sessionLength,
+						lastLoggedInDate: data.lastLoggedIn,
+						username: data.username,
+						email: data.email,
+						dateOfCreation: data.dateOfCreation,
+					})
 
-							return (
-								<Table.Tr key={doc.id}>
-									<Table.Th>{data.email || 'N/A'}</Table.Th>
-									<Table.Th>
-										{data.username || 'N/A'}
-									</Table.Th>
-									<Table.Th>
-										{doc
-											.data()
-											.lastLoggedIn?.toDate()
-											.toLocaleTimeString('en-US') ||
-											'N/A'}
-									</Table.Th>
-									<Table.Th>
-										{data.loginCount || 'N/A'}
-									</Table.Th>
-									<Table.Th>
-										{Math.floor(
-											data.loginCount /
-												getDifferenceBetweenDates(
-													data.lastLoggedIn
-														.toDate()
-														.toString(),
-													data.dateOfCreation
-														.toDate()
-														.toString()
-												)
-										) || 'N/A'}
-									</Table.Th>
-									<Table.Th>
-										{data.sessionLength || 'N/A'}
-									</Table.Th>
-								</Table.Tr>
-							)
-						})}
-					</>
-				)}
+					return (
+						<Table.Tr key={doc.id}>
+							<Table.Th>{data.email || 'N/A'}</Table.Th>
+							<Table.Th>{data.username || 'N/A'}</Table.Th>
+							<Table.Th>
+								{doc
+									.data()
+									.lastLoggedIn?.toDate()
+									.toLocaleTimeString('en-US') || 'N/A'}
+							</Table.Th>
+							<Table.Th>{data.loginCount || 'N/A'}</Table.Th>
+							<Table.Th>
+								{Math.floor(
+									data.loginCount /
+										getDifferenceBetweenDates(
+											data.lastLoggedIn
+												.toDate()
+												.toString(),
+											data.dateOfCreation
+												.toDate()
+												.toString()
+										)
+								) || 'N/A'}
+							</Table.Th>
+							<Table.Th>{data.sessionLength || 'N/A'}</Table.Th>
+						</Table.Tr>
+					)
+				})}
 			</DataTable>
 			<h1>Logged In Yesterday</h1>
 

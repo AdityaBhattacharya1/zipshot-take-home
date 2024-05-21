@@ -78,7 +78,6 @@ const DataVisualisation: React.FC<Props> = ({ userData }) => {
 		}))
 		.flat()
 		.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-	console.log('line', lineChartData)
 
 	return (
 		<div>
