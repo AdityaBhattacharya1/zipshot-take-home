@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 import { auth, googleProvider, db } from '../config/firebase'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { signInWithPopup } from 'firebase/auth'
 import {
 	doc,
@@ -11,7 +10,6 @@ import {
 } from 'firebase/firestore'
 
 const Login = () => {
-	const [_] = useAuthState(auth)
 	const navigate = useNavigate()
 	const signInWithGoogle = async () => {
 		try {
