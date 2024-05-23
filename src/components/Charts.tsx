@@ -66,8 +66,6 @@ const DataVisualisation: React.FC<Props> = ({ userData }) => {
 		{}
 	)
 
-	console.log('group', groupedData)
-
 	const lineChartData = Object.keys(groupedData)
 		.map((date) => ({
 			date,
@@ -76,7 +74,6 @@ const DataVisualisation: React.FC<Props> = ({ userData }) => {
 				0
 			),
 		}))
-		.flat()
 		.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
 	return (
