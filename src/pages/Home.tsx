@@ -25,8 +25,10 @@ const Home: React.FC = () => {
 	const [yesterdaySignedInUsers, setYesterdaySignedInUsers] = useState<any>()
 	const [searchQuery, setSearchQuery] = useState<string>('')
 	const [filteredUserData, setFilteredUserData] = useState<any[]>([])
+
 	const [user] = useAuthState(auth)
 	const navigate = useNavigate()
+
 	const [usersList, usersListLoading, usersListError] = useCollection(
 		collection(getFirestore(app), 'users'),
 		{
@@ -37,8 +39,11 @@ const Home: React.FC = () => {
 	startDate.setHours(0, 0, 0, 0)
 	const endDate = useMemo(() => new Date(Date.now() - 864e5), [])
 	endDate.setHours(23, 59, 59, 999)
+
 	const userDataArr: any[] = []
+
 	const onAction = () => {}
+
 	const { getElapsedTime } = useIdleTimer({
 		onAction,
 		timeout: 10_000,
@@ -121,7 +126,8 @@ const Home: React.FC = () => {
 					? filteredUserData
 					: usersList?.docs
 				)?.map((doc) => {
-					const data = doc.data()
+					let data = doc.data()
+
 					userDataArr.push({
 						sessionLength: data.sessionLength,
 						lastLoggedInDate: data.lastLoggedIn,

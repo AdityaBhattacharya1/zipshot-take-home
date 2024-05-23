@@ -7,9 +7,11 @@ import {
 	setDoc,
 	getDoc,
 	runTransaction,
+	DocumentData,
 } from 'firebase/firestore'
+import React from 'react'
 
-const Login = () => {
+const Login: React.FC = () => {
 	const navigate = useNavigate()
 	const signInWithGoogle = async () => {
 		try {
@@ -19,7 +21,7 @@ const Login = () => {
 			if (userCreds) {
 				const userRef = doc(db, 'users', userCreds.uid)
 				const docSnapshot = await getDoc(userRef)
-				let data: any = docSnapshot.data()
+				let data: DocumentData | undefined = docSnapshot.data()
 
 				if (!docSnapshot.exists()) {
 					await setDoc(userRef, {
@@ -33,7 +35,7 @@ const Login = () => {
 				} else {
 					try {
 						await runTransaction(db, async (transaction) => {
-							const newLoginCount = data.loginCount + 1
+							const newLoginCount = data?.loginCount + 1
 							transaction.update(userRef, {
 								lastLoggedIn: Timestamp.fromDate(new Date()),
 								loginCount: newLoginCount,
