@@ -11,7 +11,7 @@ import {
 } from 'firebase/firestore'
 
 const Login = () => {
-	const [user] = useAuthState(auth)
+	const [_] = useAuthState(auth)
 	const navigate = useNavigate()
 	const signInWithGoogle = async () => {
 		try {
@@ -22,7 +22,6 @@ const Login = () => {
 				const userRef = doc(db, 'users', userCreds.uid)
 				const docSnapshot = await getDoc(userRef)
 				let data: any = docSnapshot.data()
-				console.log('user', user)
 
 				if (!docSnapshot.exists()) {
 					await setDoc(userRef, {
